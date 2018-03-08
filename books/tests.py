@@ -13,4 +13,4 @@ class BookTest(TestCase):
 
     def test_string_representation(self):
         book = Book.objects.get(id=1)
-        self.assertEqual(str(book), snip.title)
+        self.assertEqual(str(book), book.title)
