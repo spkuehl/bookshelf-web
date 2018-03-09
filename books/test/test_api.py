@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Book
+from books.models import Book
 
 
 class BookAPITests(APITestCase):
