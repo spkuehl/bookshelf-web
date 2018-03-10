@@ -14,6 +14,6 @@ class BookAPITests(APITestCase):
                 'author': 'Phillip Pullman'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Account.objects.count(), 1)
-        self.assertEqual(Account.objects.get().name, 'The Golden Compass')
-        self.assertEqual(Account.objects.get().author, 'Phillip Pullman')
+        self.assertEqual(Book.objects.count(), 1)
+        self.assertEqual(Book.objects.get().name, 'The Golden Compass')
+        self.assertEqual(Book.objects.get().author, 'Phillip Pullman')
