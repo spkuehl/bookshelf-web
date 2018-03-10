@@ -33,7 +33,7 @@ class CreateBookTest(APITestCase):
         self.assertEqual(Book.objects.get().author, 'Phillip Pullman')
 
 
-class DeleteUserBook(APITestCase):
+class DeleteBookTest(APITestCase):
     """
     Tests /books delete operations.
     """
