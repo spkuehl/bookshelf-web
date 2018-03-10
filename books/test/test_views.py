@@ -50,5 +50,7 @@ class DeleteBookTest(APITestCase):
         self.client.login(username='sutest', password='supass')
 
     def test_can_delete_book(self):
+        self.assertEqual(Book.objects.count(), 1)
         response = self.client.delete(reverse('book-detail', args=[self.book.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Book.objects.count(), 0)
