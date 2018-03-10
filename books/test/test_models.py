@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Book
+from books.models import Book
 
 class BookTest(TestCase):
     """ Test module for Book Model. """
