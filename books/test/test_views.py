@@ -50,7 +50,29 @@ class DeleteBookTest(APITestCase):
         self.client.login(username='sutest', password='supass')
 
     def test_can_delete_book(self):
-        self.assertEqual(Book.objects.count(), 1)
         response = self.client.delete(reverse('book-detail', args=[self.book.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Book.objects.count(), 0)
+
+
+class UpdateBookTest(APITestCase):
+    """
+    Tests /books put operations.
+    """
+
+    def setUp(self):
+        self.book = Book.objects.create(
+            title='The Golden Compass',
+            author='Phillip Pullman')
+        self.superuser = User.objects.create_superuser(
+            'sutest',
+            'sutest@supass.com',
+            'supass'
+        )
+        self.data = {'author':'Phillip Pullman', 'title': 'The Northern Lights'}
+        self.client.login(username='sutest', password='supass')
+
+    def test_can_update_book(self):
+        response = self.client.put(reverse('book-detail', args=[self.book.id]),  self.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Book.objects.get().title, 'The Northern Lights')
