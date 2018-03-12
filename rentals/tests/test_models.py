@@ -9,8 +9,7 @@ class RentalTest(TestCase):
 
     def setUp(self):
         Book.objects.create(
-            id = 1,
-            title = 'Game of Thrones',
+            title = 'A Game of Thrones',
             author = 'George RR Martin'
         )
         User.objects.create_user(
@@ -20,12 +19,12 @@ class RentalTest(TestCase):
         )
         Rental.objects.create(
             user = User.objects.get(),
-            book = Book.objects.get(id=1),
-            due_date = datetime.date.today()
+            book = Book.objects.get(),
+            due_date = datetime.date.today(),
         )
 
     def test_string_representation(self):
-        rental = Rental.objects.get(id=1)
-        self.assertEqual(str(rental), 'Game of Thrones %s' % datetime.date.today())
+        rental = Rental.objects.get()
+        self.assertEqual(str(rental), 'A Game of Thrones %s' % datetime.date.today())
 
     # More testing needed. Due Date & Renewel Count, etc.
