@@ -26,5 +26,3 @@ class RentalTest(TestCase):
     def test_string_representation(self):
         rental = Rental.objects.get()
         self.assertEqual(str(rental), 'A Game of Thrones %s' % datetime.date.today())
-
-    # More testing needed. Due Date & Renewel Count, etc.
