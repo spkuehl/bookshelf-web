@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from bookshelf.users.models import User
 from books.models import Book
 from rentals.models import Rental
+import datetime
 
 
 class CreateRentalTest(APITestCase):
@@ -13,13 +14,19 @@ class CreateRentalTest(APITestCase):
 
     def setUp(self):
         self.url = reverse('rental-list')
-        self.data = {'title': 'The Golden Compass',
-                     'author': 'Phillip Pullman'}
-        self.superuser = User.objects.create_superuser(
+        self.book = Book.objects.create(
+            title='The Golden Compass',
+            author='Phillip Pullman'
+        )
+        self.user = User.objects.create_superuser(
             'sutest',
             'sutest@supass.com',
             'supass'
         )
+        self.data = {'book': self.book.id,
+                     'user': self.user.id,
+                     'due_date': datetime.date.today()
+        }
         self.client.login(username='sutest', password='supass')
 
     def test_create_rental(self):
@@ -29,9 +36,7 @@ class CreateRentalTest(APITestCase):
 
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Book.objects.count(), 1)
-        self.assertEqual(Book.objects.get().title, 'The Golden Compass')
-        self.assertEqual(Book.objects.get().author, 'Phillip Pullman')
+        self.assertEqual(Rental.objects.count(), 1)
 
 
 # class DeleteBookTest(APITestCase):
