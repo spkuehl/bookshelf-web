@@ -9,6 +9,7 @@ class Rental(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     start_date = models.DateField(auto_now_add=True)
     due_date = models.DateField(null=False, blank=False)
+    date_returned = models.DateField(null=True, blank=True)
     renewel_count = models.PositiveIntegerField(default=0,
         validators=[MaxValueValidator(3)])
 
