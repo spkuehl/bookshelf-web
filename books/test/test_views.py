@@ -42,19 +42,32 @@ class DeleteBookTest(APITestCase):
     """
 
     def setUp(self):
-        self.book = Book.objects.create(
+        self.book_one = Book.objects.create(
             title='The Golden Compass',
             author='Phillip Pullman',
             publication_date=datetime.date.today())
+
+        self.book_two = Book.objects.create(
+            title='The Subtle Knife',
+            author='Phillip Pullman',
+            publication_date=datetime.date.today())
+
         self.superuser = User.objects.create_superuser(
             'sutest',
             'sutest@supass.com',
             'supass'
         )
+
         self.client.login(username='sutest', password='supass')
 
-    def test_can_delete_book(self):
-        response = self.client.delete(reverse('book-detail', args=[self.book.id]))
+    def test_can_delete_one_book(self):
+        response = self.client.delete(reverse('book-detail', args=[self.book_one.id]))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Book.objects.count(), 1)
+
+    def test_can_delete_both_books(self):
+        response = self.client.delete(reverse('book-detail', args=[self.book_one.id]))
+        response = self.client.delete(reverse('book-detail', args=[self.book_two.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Book.objects.count(), 0)
 
