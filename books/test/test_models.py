@@ -1,5 +1,6 @@
 from django.test import TestCase
 from books.models import Book
+import datetime
 
 class BookTest(TestCase):
     """ Test module for Book Model. """
@@ -8,7 +9,8 @@ class BookTest(TestCase):
         Book.objects.create(
             id=1,
             title='Game of Thrones',
-            author='George RR Martin'
+            author='George RR Martin',
+            publication_date=datetime.date.today()
         )
 
     def test_string_representation(self):

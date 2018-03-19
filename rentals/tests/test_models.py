@@ -10,7 +10,8 @@ class RentalTest(TestCase):
     def setUp(self):
         Book.objects.create(
             title = 'A Game of Thrones',
-            author = 'George RR Martin'
+            author = 'George RR Martin',
+            publication_date=datetime.date.today()
         )
         User.objects.create_user(
             'sutest',

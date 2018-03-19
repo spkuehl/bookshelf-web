@@ -16,7 +16,8 @@ class CreateRentalTest(APITestCase):
         self.url = reverse('rental-list')
         self.book = Book.objects.create(
             title='The Golden Compass',
-            author='Phillip Pullman'
+            author='Phillip Pullman',
+            publication_date=datetime.date.today()
         )
         self.user = User.objects.create_superuser(
             'sutest',
@@ -57,7 +58,8 @@ class DeleteRentalTest(APITestCase):
         self.url = reverse('rental-list')
         self.book = Book.objects.create(
             title='The Golden Compass',
-            author='Phillip Pullman'
+            author='Phillip Pullman',
+            publication_date=datetime.date.today()
         )
         self.user = User.objects.create_superuser(
             'sutest',
@@ -96,7 +98,9 @@ class UpdateRentalTest(APITestCase):
         self.url = reverse('rental-list')
         self.book = Book.objects.create(
             title='The Golden Compass',
-            author='Phillip Pullman'
+            author='Phillip Pullman',
+            publication_date=datetime.date.today()
+
         )
         self.user = User.objects.create_superuser(
             'sutest',

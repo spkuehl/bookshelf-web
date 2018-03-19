@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from bookshelf.users.models import User
 from books.models import Book
+import datetime
 
 
 class CreateBookTest(APITestCase):
@@ -13,7 +14,9 @@ class CreateBookTest(APITestCase):
     def setUp(self):
         self.url = reverse('book-list')
         self.data = {'title': 'The Golden Compass',
-                     'author': 'Phillip Pullman'}
+                     'author': 'Phillip Pullman',
+                     'publication_date': '2013-01-29',
+        }
         self.superuser = User.objects.create_superuser(
             'sutest',
             'sutest@supass.com',
@@ -41,7 +44,8 @@ class DeleteBookTest(APITestCase):
     def setUp(self):
         self.book = Book.objects.create(
             title='The Golden Compass',
-            author='Phillip Pullman')
+            author='Phillip Pullman',
+            publication_date=datetime.date.today())
         self.superuser = User.objects.create_superuser(
             'sutest',
             'sutest@supass.com',
@@ -63,13 +67,16 @@ class UpdateBookTest(APITestCase):
     def setUp(self):
         self.book = Book.objects.create(
             title='The Golden Compass',
-            author='Phillip Pullman')
+            author='Phillip Pullman',
+            publication_date=datetime.date.today())
         self.superuser = User.objects.create_superuser(
             'sutest',
             'sutest@supass.com',
             'supass'
         )
-        self.data = {'author':'Phillip Pullman', 'title': 'The Northern Lights'}
+        self.data = {'author':'Phillip Pullman',
+                     'title': 'The Northern Lights',
+                     'publication_date':datetime.date.today()}
         self.client.login(username='sutest', password='supass')
 
     def test_can_update_book(self):
