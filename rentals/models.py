@@ -15,3 +15,12 @@ class Rental(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.book, self.start_date)
+
+
+class Reservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    reserve_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s %s' % (self.user, self.reserve_date)
