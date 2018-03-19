@@ -76,10 +76,15 @@ class UpdateBookTest(APITestCase):
         )
         self.data = {'author':'Phillip Pullman',
                      'title': 'The Northern Lights',
-                     'publication_date':datetime.date.today()}
+                     'publication_date':(datetime.date.today() - datetime.timedelta(120))}
         self.client.login(username='sutest', password='supass')
 
     def test_can_update_book(self):
         response = self.client.put(reverse('book-detail', args=[self.book.id]),  self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Book.objects.get().title, 'The Northern Lights')
+
+    def test_can_transition_to_is_not_new(self):
+        self.assertEqual(Book.objects.get().is_new(), True)
+        response = self.client.put(reverse('book-detail', args=[self.book.id]),  self.data)
+        self.assertEqual(Book.objects.get().is_new(), False)
