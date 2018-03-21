@@ -19,11 +19,36 @@ class RentalTest(TestCase):
             'supass'
         )
         Rental.objects.create(
+            id = 1,
+            user = User.objects.get(),
+            book = Book.objects.get(),
+            due_date = datetime.date.today() - datetime.timedelta(-5),
+        )
+        Rental.objects.create(
+            id = 2,
+            user = User.objects.get(),
+            book = Book.objects.get(),
+            due_date = datetime.date.today() - datetime.timedelta(5),
+        )
+        Rental.objects.create(
+            id = 3,
             user = User.objects.get(),
             book = Book.objects.get(),
             due_date = datetime.date.today(),
         )
 
     def test_string_representation(self):
-        rental = Rental.objects.get()
+        rental = Rental.objects.get(id=1)
         self.assertEqual(str(rental), 'A Game of Thrones %s' % datetime.date.today())
+
+    def test_days_until_due_past_due_date(self):
+        rental = Rental.objects.get(id=1)
+        self.assertEqual(rental.days_until_due(), -5)
+
+    def test_days_until_due_future_due_date(self):
+        rental = Rental.objects.get(id=2)
+        self.assertEqual(rental.days_until_due(), 5)
+
+    def test_days_until_due_today_due_date(self):
+        rental = Rental.objects.get(id=3)
+        self.assertEqual(rental.days_until_due(), 0)
