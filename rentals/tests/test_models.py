@@ -9,9 +9,16 @@ class RentalTest(TestCase):
 
     def setUp(self):
         Book.objects.create(
+            id = 1,
             title = 'A Game of Thrones',
             author = 'George RR Martin',
             publication_date=datetime.date.today()
+        )
+        Book.objects.create(
+            id = 2,
+            title = 'A Storm of Swords',
+            author = 'George RR Martin',
+            publication_date=datetime.date.today() - datetime.timedelta(150)
         )
         User.objects.create_user(
             'sutest',
@@ -21,25 +28,25 @@ class RentalTest(TestCase):
         Rental.objects.create(
             id = 1,
             user = User.objects.get(),
-            book = Book.objects.get(),
+            book = Book.objects.get(id=1),
             due_date = datetime.date.today() - datetime.timedelta(-5),
         )
         Rental.objects.create(
             id = 2,
             user = User.objects.get(),
-            book = Book.objects.get(),
+            book = Book.objects.get(id=1),
             due_date = datetime.date.today() - datetime.timedelta(5),
         )
         Rental.objects.create(
             id = 3,
             user = User.objects.get(),
-            book = Book.objects.get(),
+            book = Book.objects.get(id=1),
             due_date = datetime.date.today(),
         )
         Rental.objects.create(
             id = 4,
             user = User.objects.get(),
-            book = Book.objects.get(),
+            book = Book.objects.get(id=2),
             due_date = datetime.date.today(),
             date_returned = datetime.date.today(),
         )
@@ -63,3 +70,11 @@ class RentalTest(TestCase):
     def test_days_until_due_already_returned(self):
         rental = Rental.objects.get(id=4)
         self.assertEqual(rental.days_until_due(), None)
+
+    def test_rental_period_is_7(self):
+        rental = Rental.objects.get(id=1)
+        self.assertEqual(rental.rental_period(), 7)
+
+    def test_rental_period_is_21(self):
+        rental = Rental.objects.get(id=4)
+        self.assertEqual(rental.rental_period(), 21)
