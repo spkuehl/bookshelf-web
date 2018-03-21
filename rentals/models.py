@@ -14,7 +14,10 @@ class Rental(models.Model):
         validators=[MaxValueValidator(3)])
 
     def days_until_due(self):
-        return (datetime.date.today() - self.due_date).days
+        if self.date_returned:
+            return None
+        else:
+            return (datetime.date.today() - self.due_date).days
 
     def __str__(self):
         return '%s %s' % (self.book, self.start_date)

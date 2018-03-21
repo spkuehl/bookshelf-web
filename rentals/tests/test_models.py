@@ -36,6 +36,13 @@ class RentalTest(TestCase):
             book = Book.objects.get(),
             due_date = datetime.date.today(),
         )
+        Rental.objects.create(
+            id = 4,
+            user = User.objects.get(),
+            book = Book.objects.get(),
+            due_date = datetime.date.today(),
+            date_returned = datetime.date.today(),
+        )
 
     def test_string_representation(self):
         rental = Rental.objects.get(id=1)
@@ -52,3 +59,7 @@ class RentalTest(TestCase):
     def test_days_until_due_today_due_date(self):
         rental = Rental.objects.get(id=3)
         self.assertEqual(rental.days_until_due(), 0)
+
+    def test_days_until_due_already_returned(self):
+        rental = Rental.objects.get(id=4)
+        self.assertEqual(rental.days_until_due(), None)
