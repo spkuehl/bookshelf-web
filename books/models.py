@@ -21,22 +21,21 @@ class Book(models.Model):
         else:
             return 21
 
-    def create_rental(user, book, self):
-        if user.is_authenticated():
+    def create_rental(self, user, book):
+        # if request.user.is_authenticated():
             if book.is_rented:
-                return False #Rental not created
+                return None #Rental not created
             else:
-                rental = rentals.models.Rental.create(
+                rental = rentals.models.Rental.objects.create(
                     user = user,
                     book = book,
-                    due_date = datetime.date.today() + datetime.timedelta(rental_period),
-
+                    due_date = datetime.date.today() + datetime.timedelta(book.rental_period()),
                 )
                 book.is_rented = True
                 book.save()
-                return True #Rental created
-        else:
-            return False #access denied
+                return rental #Rental created
+        # else:
+        #     return False #access denied
 
     def finish_rental(user, book, rental, self):
         if user.is_authenticated():
@@ -45,9 +44,9 @@ class Book(models.Model):
                 book.is_rented = False
                 return True #Rental is closed
             else:
-                return False #Book is not rented
+                return None #Book is not rented
         else:
-            return False #access denied
+            return None #access denied
 
     def renew_book(user, book, rental, self):
         if user.is_authenticated():
