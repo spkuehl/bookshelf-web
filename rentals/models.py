@@ -13,12 +13,6 @@ class Rental(models.Model):
     renewel_count = models.PositiveIntegerField(default=0,
         validators=[MaxValueValidator(3)])
 
-    def rental_period(self):
-        if self.book.is_new():
-            return 7
-        else:
-            return 21
-
     def days_until_due(self):
         if self.date_returned:
             return None
