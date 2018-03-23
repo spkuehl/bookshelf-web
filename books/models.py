@@ -51,16 +51,16 @@ class Book(models.Model):
         #     return None #access denied
 
     def renew_book(self, user, book, rental):
-        if user.is_authenticated():
+        # if user.is_authenticated():
             if book.is_rented:
                 rental.renewel_count += 1
-                rental.due_date = datetime.date.today() + datetime.timedelta(rental_period)
+                rental.due_date = datetime.date.today() + datetime.timedelta(book.rental_period())
                 rental.save()
-                return True #Rental updated
+                return rental
             else:
-                return False #Book is not rented
-        else:
-            return False #access denied
+                return None #Book is not rented
+        # else:
+        #     return None #access denied
 
     def __str__(self):
         return self.title
