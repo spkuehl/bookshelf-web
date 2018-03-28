@@ -1,6 +1,8 @@
 from django.test import TestCase
 from books.models import Book
 import datetime
+from bookshelf.users.models import User
+from rentals.models import Rental
 
 class BookTest(TestCase):
     """ Test module for Book Model. """
@@ -17,6 +19,10 @@ class BookTest(TestCase):
             title='Game of Thrones',
             author='George RR Martin',
             publication_date=datetime.date.today() - datetime.timedelta(100)
+        )
+        User.objects.create_user(
+            'utest',
+            'upass'
         )
 
     def test_string_representation(self):
@@ -38,3 +44,17 @@ class BookTest(TestCase):
     def test_rental_period_is_21(self):
         book = Book.objects.get(id=2)
         self.assertEqual(book.rental_period(), 21)
+
+    def test_create_rental_from_book_method(self):
+        book = Book.objects.get(id=1)
+        user = User.objects.get()
+        self.assertEqual(Rental.objects.count(), 0)
+        book.create_rental(book=book, user=user)
+        self.assertEqual(Rental.objects.count(), 1)
+
+    def test_can_not_rent_book_already_rented(self):
+        book = Book.objects.get(id=1)
+        user = User.objects.get()
+        book.create_rental(book=book, user=user)
+        rental = book.create_rental(book=book, user=user)
+        self.assertEqual(rental, None)
