@@ -30,3 +30,11 @@ class BookTest(TestCase):
     def test_book_is_not_new(self):
         book = Book.objects.get(id=2)
         self.assertEqual(book.is_new(), False)
+
+    def test_rental_period_is_7(self):
+        book = Book.objects.get(id=1)
+        self.assertEqual(book.rental_period(), 7)
+
+    def test_rental_period_is_21(self):
+        book = Book.objects.get(id=2)
+        self.assertEqual(book.rental_period(), 21)
