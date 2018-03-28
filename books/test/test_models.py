@@ -67,3 +67,21 @@ class BookTest(TestCase):
         book.finish_rental(book=book, user=user, rental=rental)
         self.assertEqual(rental.date_returned, datetime.date.today())
         self.assertEqual(book.is_rented, False)
+
+    def test_renew_book(self):
+        book = Book.objects.get(id=1)
+        user = User.objects.get()
+        rental = book.create_rental(book=book, user=user)
+        book.renew_book(book=book, user=user, rental=rental)
+        self.assertEqual(rental.renewel_count, 1)
+
+    def test_can_not_renew_book_over_3_times(self):
+        book = Book.objects.get(id=1)
+        user = User.objects.get()
+        rental = book.create_rental(book=book, user=user)
+        book.renew_book(book=book, user=user, rental=rental)
+        book.renew_book(book=book, user=user, rental=rental)
+        book.renew_book(book=book, user=user, rental=rental)
+        fourth_try = book.renew_book(book=book, user=user, rental=rental)
+        self.assertEqual(rental.renewel_count, 3)
+        self.assertEqual(fourth_try, None)
