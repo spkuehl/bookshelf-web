@@ -29,8 +29,12 @@ class Reservation(models.Model):
     reserve_date = models.DateField(auto_now_add=True)
     open_reservation = models.BooleanField(default=True)
 
-    # def place_in_queue(self):
-
+    def save(self, *args, **kwargs):
+        if (Reservation.objects.filter(
+            user=self.user, book=self.book, open_reservation=self.open_reservation)):
+            super().save(*args, **kwargs)  # Call the "real" save() method.
+        else:
+            return
 
     def __str__(self):
         return '%s %s' % (self.user, self.reserve_date)
