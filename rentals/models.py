@@ -30,9 +30,12 @@ class Reservation(models.Model):
     open_reservation = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        if (Reservation.objects.filter(
-            user=self.user, book=self.book, open_reservation=self.open_reservation)):
-            super().save(*args, **kwargs)  # Call the "real" save() method.
+        if self.book.is_rented == True:
+            if len(list(Reservation.objects.filter(
+                user=self.user, book=self.book, open_reservation=True))) > 0:
+                return
+            else:
+                super().save(*args, **kwargs) # Call the "real" save() method.
         else:
             return
 
