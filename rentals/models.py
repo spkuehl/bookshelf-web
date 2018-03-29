@@ -27,6 +27,17 @@ class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     reserve_date = models.DateField(auto_now_add=True)
+    open_reservation = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if self.book.is_rented == True:
+            if len(list(Reservation.objects.filter(
+                user=self.user, book=self.book, open_reservation=True))) > 0:
+                return
+            else:
+                super().save(*args, **kwargs) # Call the "real" save() method.
+        else:
+            return
 
     def __str__(self):
         return '%s %s' % (self.user, self.reserve_date)
