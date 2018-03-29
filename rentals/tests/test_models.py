@@ -73,8 +73,8 @@ class RentalTest(TestCase):
 
     def test_rental_period_is_7(self):
         rental = Rental.objects.get(id=1)
-        self.assertEqual(rental.rental_period(), 7)
+        self.assertEqual(rental.book.rental_period(), 7)
 
     def test_rental_period_is_21(self):
         rental = Rental.objects.get(id=4)
-        self.assertEqual(rental.rental_period(), 21)
+        self.assertEqual(rental.book.rental_period(), 21)
