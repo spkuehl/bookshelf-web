@@ -27,3 +27,12 @@ class UserTest(TestCase):
     def test_user_str_representation(self):
         user = User.objects.get(username='spkuehl')
         self.assertEqual(user.username, str(user))
+
+    def test_user_has_no_overdue(self):
+        return
+
+    def test_user_has_one_overdue(self):
+        return
+
+    def test_user_has_two_overdue(self):
+        return
