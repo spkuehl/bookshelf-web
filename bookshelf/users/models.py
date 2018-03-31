@@ -13,7 +13,12 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     def books_overdue(self):
-        return len(rentals.models.Rental.objects.filter(user=self.id, date_returned=None))
+        overdue = 0
+        open_rentals = rentals.models.Rental.objects.filter(user=self.id, date_returned=None)
+        for rental in open_rentals:
+            if rental.days_until_due() < 0:
+                overdue += 1
+        return overdue
 
     def __str__(self):
         return self.username
