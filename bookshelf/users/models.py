@@ -6,11 +6,14 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
-
+import rentals
 
 @python_2_unicode_compatible
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    def books_overdue(self):
+        return len(rentals.models.Rental.objects.filter(user=self.id, date_returned=None))
 
     def __str__(self):
         return self.username
