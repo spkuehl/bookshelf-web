@@ -17,7 +17,7 @@ class Rental(models.Model):
         if self.date_returned:
             return None
         else:
-            return (datetime.date.today() - self.due_date).days
+            return (self.due_date - datetime.date.today()).days
 
     def __str__(self):
         return '%s %s' % (self.book, self.start_date)

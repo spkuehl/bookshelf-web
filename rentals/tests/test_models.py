@@ -29,13 +29,13 @@ class RentalTest(TestCase):
             id = 1,
             user = User.objects.get(),
             book = Book.objects.get(id=1),
-            due_date = datetime.date.today() - datetime.timedelta(-5),
+            due_date = datetime.date.today() + datetime.timedelta(-5),
         )
         Rental.objects.create(
             id = 2,
             user = User.objects.get(),
             book = Book.objects.get(id=1),
-            due_date = datetime.date.today() - datetime.timedelta(5),
+            due_date = datetime.date.today() + datetime.timedelta(5),
         )
         Rental.objects.create(
             id = 3,
