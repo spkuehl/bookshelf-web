@@ -60,6 +60,16 @@ class BookTest(TestCase):
         rental = book.create_rental(book=book, user=user)
         self.assertEqual(rental, None)
 
+    def test_can_not_rent_book_user_has_overdue(self):
+        overdue_book = Book.objects.get(id=1)
+        book = Book.objects.get(id=2)
+        user = User.objects.get()
+        overdue_rental = overdue_book.create_rental(book=overdue_book, user=user)
+        overdue_rental.due_date = datetime.date.today() + datetime.timedelta(-20)
+        overdue_rental.save()
+        rental = book.create_rental(book=book, user=user)
+        self.assertEqual(rental, None)
+
     def test_finish_rental_from_book_method(self):
         book = Book.objects.get(id=1)
         user = User.objects.get()
