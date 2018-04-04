@@ -128,14 +128,23 @@ class ReservationTest(TestCase):
         )
 
     def test_can_create_reservation_on_rented_book(self):
+        '''
+        Ensure we can create a Reservation Object.
+        '''
         Reservation.objects.create(user = self.unrenting_user, book = self.rented_book)
         self.assertEqual(len(Reservation.objects.all()), 1)
 
     def test_can_not_create_reservation_on_unrented_book(self):
+        '''
+        Ensure we can not create a Reservation Object on an unrented (available) Book.
+        '''
         Reservation.objects.create(user = self.user, book = self.unrented_book)
         self.assertEqual(list(Reservation.objects.all()), [])
 
     def test_can_not_be_in_queue_more_than_once(self):
+        '''
+        Ensure a User can not be in Reservation queue more than once per Book.
+        '''
         Reservation.objects.create(user = self.unrenting_user, book = self.rented_book)
         Reservation.objects.create(user = self.unrenting_user, book = self.rented_book)
         self.assertEqual(len(Reservation.objects.all()), 1)
