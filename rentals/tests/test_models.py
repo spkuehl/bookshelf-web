@@ -52,30 +52,51 @@ class RentalTest(TestCase):
         )
 
     def test_string_representation(self):
+        '''
+        Ensure we display the correct string representation for Rental Objects.
+        '''
         rental = Rental.objects.get(id=1)
         self.assertEqual(str(rental), 'A Game of Thrones %s' % datetime.date.today())
 
     def test_days_until_due_past_due_date(self):
+        '''
+        Ensure we properly compute a negative days until due value for Rental Objects.
+        '''
         rental = Rental.objects.get(id=1)
         self.assertEqual(rental.days_until_due(), -5)
 
     def test_days_until_due_future_due_date(self):
+        '''
+        Ensure we properly compute a positive days until due value for Rental Objects.
+        '''
         rental = Rental.objects.get(id=2)
         self.assertEqual(rental.days_until_due(), 5)
 
     def test_days_until_due_today_due_date(self):
+        '''
+        Ensure we properly compute a zero days until due value for Rental Objects.
+        '''
         rental = Rental.objects.get(id=3)
         self.assertEqual(rental.days_until_due(), 0)
 
     def test_days_until_due_already_returned(self):
+        '''
+        Ensure we properly return None for Rental Objects already returned.
+        '''
         rental = Rental.objects.get(id=4)
         self.assertEqual(rental.days_until_due(), None)
 
     def test_rental_period_is_7(self):
+        '''
+        Ensure rental period is 7 for new books.
+        '''
         rental = Rental.objects.get(id=1)
         self.assertEqual(rental.book.rental_period(), 7)
 
     def test_rental_period_is_21(self):
+        '''
+        Ensure rental period is 21 for old books.
+        '''
         rental = Rental.objects.get(id=4)
         self.assertEqual(rental.book.rental_period(), 21)
 
