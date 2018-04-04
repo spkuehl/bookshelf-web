@@ -26,26 +26,44 @@ class BookTest(TestCase):
         )
 
     def test_string_representation(self):
+        """
+        Ensure we have the correct string representation on a Book object.
+        """
         book = Book.objects.get(id=1)
         self.assertEqual(str(book), book.title)
 
     def test_book_is_new(self):
+        """
+        Ensure we can determine a new Book object.
+        """
         book = Book.objects.get(id=1)
         self.assertEqual(book.is_new(), True)
 
     def test_book_is_not_new(self):
+        """
+        Ensure we can determine a not new Book object.
+        """
         book = Book.objects.get(id=2)
         self.assertEqual(book.is_new(), False)
 
     def test_rental_period_is_7(self):
+        """
+        Ensure we can determine a 7 day rental period for a new Book object.
+        """
         book = Book.objects.get(id=1)
         self.assertEqual(book.rental_period(), 7)
 
     def test_rental_period_is_21(self):
+        """
+        Ensure we can determine a 21 day rental period for a not new Book object.
+        """
         book = Book.objects.get(id=2)
         self.assertEqual(book.rental_period(), 21)
 
     def test_create_rental_from_book_method(self):
+        """
+        Ensure we can create a Rental from a Book object.
+        """
         book = Book.objects.get(id=1)
         user = User.objects.get()
         self.assertEqual(Rental.objects.count(), 0)
@@ -54,6 +72,9 @@ class BookTest(TestCase):
         self.assertEqual(book.is_rented, True)
 
     def test_can_not_rent_book_already_rented(self):
+        """
+        Ensure we can not create a Rental from a rented Book object.
+        """
         book = Book.objects.get(id=1)
         user = User.objects.get()
         book.create_rental(book=book, user=user)
@@ -61,6 +82,9 @@ class BookTest(TestCase):
         self.assertEqual(rental, None)
 
     def test_can_not_rent_book_user_has_overdue(self):
+        """
+        Ensure a User can not create a Rental if they have an overdue Rental.
+        """
         overdue_book = Book.objects.get(id=1)
         book = Book.objects.get(id=2)
         user = User.objects.get()
@@ -71,6 +95,9 @@ class BookTest(TestCase):
         self.assertEqual(rental, None)
 
     def test_finish_rental_from_book_method(self):
+        """
+        Ensure we can return a Rental from a Book object.
+        """
         book = Book.objects.get(id=1)
         user = User.objects.get()
         rental = book.create_rental(book=book, user=user)
@@ -79,6 +106,9 @@ class BookTest(TestCase):
         self.assertEqual(book.is_rented, False)
 
     def test_renew_book(self):
+        """
+        Ensure we can renew a Rental from a Book object.
+        """
         book = Book.objects.get(id=1)
         user = User.objects.get()
         rental = book.create_rental(book=book, user=user)
@@ -86,6 +116,9 @@ class BookTest(TestCase):
         self.assertEqual(rental.renewel_count, 1)
 
     def test_can_not_renew_book_over_3_times(self):
+        """
+        Ensure we can not renew a Book more than three times.
+        """
         book = Book.objects.get(id=1)
         user = User.objects.get()
         rental = book.create_rental(book=book, user=user)

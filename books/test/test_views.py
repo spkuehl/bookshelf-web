@@ -6,7 +6,7 @@ from books.models import Book
 import datetime
 
 
-class BookTests(APITestCase):
+class BookCRUDTests(APITestCase):
     def setUp(self):
         self.url = reverse('book-list')
         self.book_one = Book.objects.create(
@@ -37,7 +37,6 @@ class BookTests(APITestCase):
         """
         Ensure we can create a new Book object.
         """
-
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Book.objects.count(), 3)
