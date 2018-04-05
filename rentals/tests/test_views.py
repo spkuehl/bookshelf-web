@@ -7,7 +7,7 @@ from rentals.models import Rental
 import datetime
 
 
-class CreateRentalTest(APITestCase):
+class RentalAPITest(APITestCase):
     """
     Tests /rentals create operations.
     """
@@ -33,6 +33,16 @@ class CreateRentalTest(APITestCase):
                      'user': self.user.id,
                      'due_date': datetime.date.today()
         }
+        self.rental = Rental.objects.create(
+            user = self.user,
+            book = self.book,
+            due_date = datetime.date.today()
+        )
+        self.new_date = datetime.date.today() + datetime.timedelta(1)
+        self.data = {'user': self.user.id,
+                     'book': self.book.id,
+                     'due_date': self.new_date
+        }
 
     def test_create_rental(self):
         """
@@ -41,41 +51,12 @@ class CreateRentalTest(APITestCase):
         self.client.login(username='sutest', password='supass')
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Rental.objects.count(), 1)
+        self.assertEqual(Rental.objects.count(), 2)
 
     def test_user_can_not_create_rental(self):
         self.client.login(username='utest', password='upass')
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-
-class DeleteRentalTest(APITestCase):
-    """
-    Tests /rentals delete operations.
-    """
-
-    def setUp(self):
-        self.url = reverse('rental-list')
-        self.book = Book.objects.create(
-            title='The Golden Compass',
-            author='Phillip Pullman',
-            publication_date=datetime.date.today()
-        )
-        self.user = User.objects.create_superuser(
-            'sutest',
-            'sutest@supass.com',
-            'supass'
-        )
-        self.user = User.objects.create_user(
-            'utest',
-            'utest@upass.com',
-            'upass'
-        )
-        self.rental = Rental.objects.create(
-            user = self.user,
-            book = self.book,
-            due_date = datetime.date.today()
-        )
 
     def test_can_delete_rental(self):
         self.client.login(username='sutest', password='supass')
@@ -87,41 +68,6 @@ class DeleteRentalTest(APITestCase):
         self.client.login(username='utest', password='upass')
         response = self.client.delete(reverse('rental-detail', args=[self.rental.id]))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-
-class UpdateRentalTest(APITestCase):
-    """
-    Tests /rentals put operations.
-    """
-
-    def setUp(self):
-        self.url = reverse('rental-list')
-        self.book = Book.objects.create(
-            title='The Golden Compass',
-            author='Phillip Pullman',
-            publication_date=datetime.date.today()
-
-        )
-        self.user = User.objects.create_superuser(
-            'sutest',
-            'sutest@supass.com',
-            'supass'
-        )
-        self.user = User.objects.create_user(
-            'utest',
-            'utest@upass.com',
-            'upass'
-        )
-        self.rental = Rental.objects.create(
-            user = self.user,
-            book = self.book,
-            due_date = datetime.date.today()
-        )
-        self.new_date = datetime.date.today() + datetime.timedelta(1)
-        self.data = {'user': self.user.id,
-                     'book': self.book.id,
-                     'due_date': self.new_date
-        }
 
     def test_admin_can_update_rental(self):
         self.client.login(username='sutest', password='supass')
