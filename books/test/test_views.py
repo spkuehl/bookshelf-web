@@ -6,7 +6,7 @@ from books.models import Book
 import datetime
 
 
-class BookCRUDTests(APITestCase):
+class BookAPITests(APITestCase):
     def setUp(self):
         self.url = reverse('book-list')
         self.book_one = Book.objects.create(
