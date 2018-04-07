@@ -11,4 +11,4 @@ class RentalSerializer(serializers.ModelSerializer):
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
-        fields = ('user', 'book')
+        fields = ('id', 'user', 'book')
