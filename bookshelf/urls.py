@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from .users.views import UserViewSet, UserCreateViewSet
 from books.views import BookViewSet
-from rentals.views import RentalViewSet
+from rentals.views import RentalViewSet, ReservationViewSet
 
 
 router = DefaultRouter()
@@ -15,6 +15,7 @@ router.register(r'users', UserViewSet)
 router.register(r'users', UserCreateViewSet)
 router.register(r'books', BookViewSet)
 router.register(r'rentals', RentalViewSet)
+router.register(r'reservations', ReservationViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
