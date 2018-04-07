@@ -19,11 +19,6 @@ class RentalAPITest(APITestCase):
             author='Phillip Pullman',
             publication_date=datetime.date.today()
         )
-        self.user = User.objects.create_superuser(
-            'sutest',
-            'sutest@supass.com',
-            'supass'
-        )
         self.user = User.objects.create_user(
             'utest',
             'utest@upass.com',
@@ -44,53 +39,29 @@ class RentalAPITest(APITestCase):
                      'due_date': self.new_date
         }
 
-    def test_create_rental(self):
+    def test_user_can_not_create_rental(self):
         """
-        Ensure superuser can create a new Rental object.
+        Ensure user can create a new Rental object.
         """
-        self.client.login(username='sutest', password='supass')
+        self.client.login(username='utest', password='upass')
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Rental.objects.count(), 2)
 
-    def test_user_can_not_create_rental(self):
+    def test_user_can_not_delete_rental(self):
         """
-        Ensure user can not create a new Rental object.
+        Ensure user can delete a Rental object.
         """
         self.client.login(username='utest', password='upass')
-        response = self.client.post(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_can_delete_rental(self):
-        """
-        Ensure superuser can delete a Rental object.
-        """
-        self.client.login(username='sutest', password='supass')
         response = self.client.delete(reverse('rental-detail', args=[self.rental.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Rental.objects.count(), 0)
 
-    def test_user_can_not_delete_rental(self):
+    def test_user_can_not_update_rental(self):
         """
-        Ensure user can not delete a Rental object.
+        Ensure user can  update a new Rental object.
         """
         self.client.login(username='utest', password='upass')
-        response = self.client.delete(reverse('rental-detail', args=[self.rental.id]))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_admin_can_update_rental(self):
-        """
-        Ensure superuser can update a new Rental object.
-        """
-        self.client.login(username='sutest', password='supass')
         response = self.client.put(reverse('rental-detail', args=[self.rental.id]),  self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Rental.objects.get().due_date, self.new_date)
-
-    def test_user_can_not_update_rental(self):
-        """
-        Ensure user can not update a new Rental object.
-        """
-        self.client.login(username='utest', password='upass')
-        response = self.client.put(reverse('rental-detail', args=[self.rental.id]),  self.data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
