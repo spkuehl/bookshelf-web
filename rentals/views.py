@@ -10,4 +10,3 @@ class RentalViewSet(viewsets.ModelViewSet):
     """
     queryset = Rental.objects.all()
     serializer_class = RentalSerializer
-    permission_classes = [IsAdminOrReadOnly]
