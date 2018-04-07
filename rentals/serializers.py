@@ -5,7 +5,8 @@ from .models import Rental, Reservation
 class RentalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rental
-        fields = '__all__'
+        fields = ('id', 'user', 'book', 'start_date',
+                  'due_date', 'date_returned', 'renewel_count')
 
 
 class ReservationSerializer(serializers.ModelSerializer):
