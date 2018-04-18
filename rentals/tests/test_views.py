@@ -39,7 +39,7 @@ class RentalAPITest(APITestCase):
                      'due_date': self.new_date
         }
 
-    def test_user_can_not_create_rental(self):
+    def test_user_can_create_rental(self):
         """
         Ensure user can create a new Rental object.
         """
@@ -48,7 +48,7 @@ class RentalAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Rental.objects.count(), 2)
 
-    def test_user_can_not_delete_rental(self):
+    def test_user_can_delete_rental(self):
         """
         Ensure user can delete a Rental object.
         """
@@ -57,9 +57,9 @@ class RentalAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Rental.objects.count(), 0)
 
-    def test_user_can_not_update_rental(self):
+    def test_user_can_update_rental(self):
         """
-        Ensure user can  update a new Rental object.
+        Ensure user can update a new Rental object.
         """
         self.client.login(username='utest', password='upass')
         response = self.client.put(reverse('rental-detail', args=[self.rental.id]),  self.data)
