@@ -9,6 +9,7 @@ import datetime
 class BookAPITests(APITestCase):
     def setUp(self):
         self.url = reverse('book-list')
+
         self.book_one = Book.objects.create(
             title='The Golden Compass',
             author='Phillip Pullman',
@@ -18,7 +19,9 @@ class BookAPITests(APITestCase):
             title='The Subtle Knife',
             author='Phillip Pullman',
             publication_date=datetime.date.today())
-        self.data = {'title': 'The Amber Spyglass',
+
+        self.data = {'id': '3',
+                     'title': 'The Amber Spyglass',
                      'author': 'Phillip Pullman',
                      'publication_date': '2013-01-29',
         }
@@ -40,8 +43,7 @@ class BookAPITests(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Book.objects.count(), 3)
-        self.assertEqual(Book.objects.get(id=3).title, 'The Amber Spyglass')
-        self.assertEqual(Book.objects.get(id=3).author, 'Phillip Pullman')
+        self.assertEqual(Book.objects.latest('id').title, 'The Amber Spyglass')
 
     def test_can_delete_one_book(self):
         """
