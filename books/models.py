@@ -1,7 +1,7 @@
 from django.db import models
 import datetime
 import rentals
-
+import rentals.emails as rental_emails
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
@@ -33,6 +33,7 @@ class Book(models.Model):
                 )
                 book.is_rented = True
                 book.save()
+                rental_emails.send_confirmation(user, rental)
                 return rental #Rental created
         # else:
         #     return False #access denied
