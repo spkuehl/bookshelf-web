@@ -8,6 +8,8 @@ from bookshelf.users.models import User
 import datetime
 
 class EmailTest(TestCase):
+    """ Test module for Email Confirmations. """
+
     def setUp(self):
         Book.objects.create(
             title = 'A Storm of Swords',
@@ -27,6 +29,9 @@ class EmailTest(TestCase):
         )
 
     def test_send_confirmation_email(self):
+        '''
+        Ensure can send a rental confirmation email.
+        '''
         user = User.objects.get()
         rental = Rental.objects.get(id=1)
 
@@ -46,6 +51,8 @@ class EmailTest(TestCase):
 
 
 class EmailIntegrationTest(TestCase):
+    """ Test module for Email Confirmations via Book Model. """
+
     def setUp(self):
         self.book = Book.objects.create(
             title = 'A Storm of Swords',
@@ -59,6 +66,9 @@ class EmailIntegrationTest(TestCase):
         )
 
     def test_send_confirmation_email_from_Book_model_method(self):
+        '''
+        Ensure Book.create_rental can create a Rental.
+        '''
         # Create rental to trigger email.
         self.book.create_rental(self.user, self.book)
 
