@@ -117,3 +117,53 @@ class ReservationAPITest(APITestCase):
         self.assertEqual(Reservation.objects.count(), 0)
 
     # Test can update reservation?
+
+
+
+class ReservationQueueTest(APITestCase):
+    """
+    Tests the correct queue length is retrieved.
+    """
+    def setUp(self):
+        self.book = Book.objects.create(
+            title='The Golden Compass',
+            author='Phillip Pullman',
+            publication_date=datetime.date.today(),
+            is_rented=True
+        )
+        self.user = User.objects.create_user(
+            'utest',
+            'utest@upass.com',
+            'upass'
+        )
+        self.first_user_in_line = User.objects.create_user(
+            'first_user_in_line',
+            'utest@upass.com',
+            'upass'
+        )
+        self.third_user_in_line = User.objects.create_user(
+            'third_user_in_line',
+            'utest@upass.com',
+            'upass'
+        )
+        self.reservation_1 = Reservation.objects.create(
+            user = self.first_user_in_line,
+            book = self.book,
+        )
+        self.reservation_2 = Reservation.objects.create(
+            user = self.user,
+            book = self.book,
+        )
+        self.reservation_3 = Reservation.objects.create(
+            user = self.third_user_in_line,
+            book = self.book,
+        )
+
+    def test_reservation_list(self):
+        """
+        Ensure the correct queue length is retrieved.
+        """
+        self.assertEqual(Reservation.objects.count(), 3)
+        self.assertEqual(self.reservation_1.place_in_line(), 0)
+        self.assertEqual(self.reservation_2.place_in_line(), 1)
+        self.assertEqual(self.reservation_3.place_in_line(), 2)
