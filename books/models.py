@@ -21,18 +21,18 @@ class Book(models.Model):
         else:
             return 21
 
-    def create_rental(self, user, book):
+    def create_rental(self, user):
         # if request.user.is_authenticated():
-            if book.is_rented:
+            if self.is_rented:
                 return None #Rental not created
             else:
                 rental = rentals.models.Rental.objects.create(
                     user = user,
-                    book = book,
-                    due_date = datetime.date.today() + datetime.timedelta(book.rental_period()),
+                    book = self,
+                    due_date = datetime.date.today() + datetime.timedelta(self.rental_period()),
                 )
-                book.is_rented = True
-                book.save()
+                self.is_rented = True
+                self.save()
                 rental_emails.send_confirmation(user, rental)
                 return rental #Rental created
         # else:
