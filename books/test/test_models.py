@@ -67,7 +67,7 @@ class BookTest(TestCase):
         book = Book.objects.get(id=1)
         user = User.objects.get()
         self.assertEqual(Rental.objects.count(), 0)
-        book.create_rental(book=book, user=user)
+        book.create_rental(user=user)
         self.assertEqual(Rental.objects.count(), 1)
         self.assertEqual(book.is_rented, True)
 
@@ -77,8 +77,8 @@ class BookTest(TestCase):
         """
         book = Book.objects.get(id=1)
         user = User.objects.get()
-        book.create_rental(book=book, user=user)
-        rental = book.create_rental(book=book, user=user)
+        book.create_rental(user=user)
+        rental = book.create_rental(user=user)
         self.assertEqual(rental, None)
 
     def test_can_not_rent_book_user_has_overdue(self):
@@ -88,10 +88,10 @@ class BookTest(TestCase):
         overdue_book = Book.objects.get(id=1)
         book = Book.objects.get(id=2)
         user = User.objects.get()
-        overdue_rental = overdue_book.create_rental(book=overdue_book, user=user)
+        overdue_rental = overdue_book.create_rental(user=user)
         overdue_rental.due_date = datetime.date.today() + datetime.timedelta(-20)
         overdue_rental.save()
-        rental = book.create_rental(book=book, user=user)
+        rental = book.create_rental(user=user)
         self.assertEqual(rental, None)
 
     def test_finish_rental_from_book_method(self):
@@ -100,8 +100,8 @@ class BookTest(TestCase):
         """
         book = Book.objects.get(id=1)
         user = User.objects.get()
-        rental = book.create_rental(book=book, user=user)
-        book.finish_rental(book=book, user=user, rental=rental)
+        rental = book.create_rental(user=user)
+        book.finish_rental(user=user, rental=rental)
         self.assertEqual(rental.date_returned, datetime.date.today())
         self.assertEqual(book.is_rented, False)
 
@@ -111,8 +111,8 @@ class BookTest(TestCase):
         """
         book = Book.objects.get(id=1)
         user = User.objects.get()
-        rental = book.create_rental(book=book, user=user)
-        book.renew_book(book=book, user=user, rental=rental)
+        rental = book.create_rental(user=user)
+        book.renew_book(user=user, rental=rental)
         self.assertEqual(rental.renewel_count, 1)
 
     def test_can_not_renew_book_over_3_times(self):
@@ -121,10 +121,10 @@ class BookTest(TestCase):
         """
         book = Book.objects.get(id=1)
         user = User.objects.get()
-        rental = book.create_rental(book=book, user=user)
-        book.renew_book(book=book, user=user, rental=rental)
-        book.renew_book(book=book, user=user, rental=rental)
-        book.renew_book(book=book, user=user, rental=rental)
-        fourth_try = book.renew_book(book=book, user=user, rental=rental)
+        rental = book.create_rental(user=user)
+        book.renew_book(user=user, rental=rental)
+        book.renew_book(user=user, rental=rental)
+        book.renew_book(user=user, rental=rental)
+        fourth_try = book.renew_book(user=user, rental=rental)
         self.assertEqual(rental.renewel_count, 3)
         self.assertEqual(fourth_try, None)

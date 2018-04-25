@@ -1,9 +1,11 @@
 from .models import Book
 from .serializers import BookSerializer
 from .permissions import IsAdminOrReadOnly
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.response import Response
 import rentals
+
 
 class BookViewSet(viewsets.ModelViewSet):
     """
@@ -13,11 +15,11 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-    @action(methods=['post'], detail=True, permission_classes=[])
+    @action(methods=['post', 'get'], detail=True)
     def checkout(self, request, pk=None):
-
         book = self.get_object()
-
-        rental = book.create_rental(request.user)
-
-        return rental
+        if book.is_rented:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            rental = book.create_rental(request.user)
+            return Response(status=status.HTTP_201_CREATED)
