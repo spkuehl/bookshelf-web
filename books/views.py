@@ -19,7 +19,16 @@ class BookViewSet(viewsets.ModelViewSet):
     def checkout(self, request, pk=None):
         book = self.get_object()
         if book.is_rented:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             rental = book.create_rental(request.user)
             return Response(status=status.HTTP_201_CREATED)
+
+    @action(methods=['post', 'get'], detail=True)
+    def checkin(self, request, pk=None):
+        book = self.get_object()
+        if book.is_rented:
+            rental = book.finish_rental(request.user)
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

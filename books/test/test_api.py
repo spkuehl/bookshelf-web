@@ -40,4 +40,4 @@ class BookAPITest(TestCase):
         url = reverse('book-checkout', kwargs={'pk': self.book.id})
         response = self.client.post(url)
         response = self.client.post(url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
