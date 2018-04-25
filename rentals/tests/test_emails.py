@@ -70,7 +70,7 @@ class EmailIntegrationTest(TestCase):
         Ensure Book.create_rental can create a Rental.
         '''
         # Create rental to trigger email.
-        self.book.create_rental(self.user, self.book)
+        self.book.create_rental(self.user)
 
         # Get Rental to find due date
         rental = Rental.objects.get()
