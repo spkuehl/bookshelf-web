@@ -2,6 +2,8 @@ from django.db import models
 import datetime
 import rentals
 import rentals.emails as rental_emails
+from django.shortcuts import get_object_or_404
+
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
@@ -38,12 +40,14 @@ class Book(models.Model):
         # else:
         #     return False #access denied
 
-    def finish_rental(self, user, rental):
+    def finish_rental(self, user):
         # if user.is_authenticated():
             if self.is_rented:
+                rental = rentals.models.Rental.objects.get(
+                    book=self, active_rental=True)
                 rental.date_returned = datetime.date.today()
-                self.is_rented = False
                 rental.save()
+                self.is_rented = False
                 self.save()
                 return rental #Rental is closed
             else:

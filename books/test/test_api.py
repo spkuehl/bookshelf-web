@@ -34,10 +34,30 @@ class BookAPITest(TestCase):
 
     def test_can_not_checkout_book_already_rented_endpoint(self):
         """
-        Ensure we can not create a rental (already out) from the book-checkout endpoint.
+        Ensure we can not create a rental (already out) from the book-checkout
+        endpoint.
         """
         self.book.is_rented = True
         url = reverse('book-checkout', kwargs={'pk': self.book.id})
         response = self.client.post(url)
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # def test_checkin_book_endpoint(self):
+    #     """
+    #     Ensure we can finish a rental from the book-checkin endpoint.
+    #     """
+    #     url = reverse('book-checkin', kwargs={'pk': self.book.id})
+    #     response = self.client.post(url)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #
+    # def test_can_not_checkin_unrented_book_endpoint(self):
+    #     """
+    #     Ensure we can not finish create a rental (already out) from the
+    #     book-checkin endpoint.
+    #     """
+    #     self.book.is_rented = True
+    #     url = reverse('book-checkin', kwargs={'pk': self.book.id})
+    #     response = self.client.post(url)
+    #     response = self.client.post(url)
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
