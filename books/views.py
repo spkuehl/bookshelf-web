@@ -26,6 +26,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post', 'get'], detail=True)
     def checkin(self, request, pk=None):
+        book = self.get_object()
         if book.is_rented:
             book.finish_rental(request.user)
             return Response(status=status.HTTP_202_ACCEPTED)

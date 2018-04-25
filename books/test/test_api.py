@@ -17,6 +17,13 @@ class BookAPITest(TestCase):
             author='George RR Martin',
             publication_date=datetime.date.today()
         )
+        self.rented_book = Book.objects.create(
+            id=2,
+            title='Game of Thrones',
+            author='George RR Martin',
+            is_rented=True,
+            publication_date=datetime.date.today()
+        )
         User.objects.create_superuser(
             'utest',
             'super@test',
@@ -43,21 +50,20 @@ class BookAPITest(TestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def test_checkin_book_endpoint(self):
-    #     """
-    #     Ensure we can finish a rental from the book-checkin endpoint.
-    #     """
-    #     url = reverse('book-checkin', kwargs={'pk': self.book.id})
-    #     response = self.client.post(url)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #
-    # def test_can_not_checkin_unrented_book_endpoint(self):
-    #     """
-    #     Ensure we can not finish create a rental (already out) from the
-    #     book-checkin endpoint.
-    #     """
-    #     self.book.is_rented = True
-    #     url = reverse('book-checkin', kwargs={'pk': self.book.id})
-    #     response = self.client.post(url)
-    #     response = self.client.post(url)
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_checkin_book_endpoint(self):
+        """
+        Ensure we can finish a rental from the book-checkin endpoint.
+        """
+        url = reverse('book-checkin', kwargs={'pk': self.rented_book.id})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_can_not_checkin_unrented_book_endpoint(self):
+        """
+        Ensure we can not finish create a rental (already out) from the
+        book-checkin endpoint.
+        """
+        url = reverse('book-checkin', kwargs={'pk': self.book.id})
+        response = self.client.post(url)
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
