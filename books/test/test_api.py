@@ -17,13 +17,6 @@ class BookAPITest(TestCase):
             author='George RR Martin',
             publication_date=datetime.date.today()
         )
-        self.rented_book = Book.objects.create(
-            id=2,
-            title='Game of Thrones',
-            author='George RR Martin',
-            is_rented=True,
-            publication_date=datetime.date.today()
-        )
         User.objects.create_superuser(
             'utest',
             'super@test',
@@ -37,6 +30,7 @@ class BookAPITest(TestCase):
         """
         url = reverse('book-checkout', kwargs={'pk': self.book.id})
         response = self.client.post(url)
+        print(self.book.is_rented)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_can_not_checkout_book_already_rented_endpoint(self):
@@ -54,7 +48,10 @@ class BookAPITest(TestCase):
         """
         Ensure we can finish a rental from the book-checkin endpoint.
         """
-        url = reverse('book-checkin', kwargs={'pk': self.rented_book.id})
+        print(self.book.is_rented)
+        checkout_url = reverse('book-checkout', kwargs={'pk': self.book.id})
+        print(self.book.is_rented)
+        url = reverse('book-checkin', kwargs={'pk': self.book.id})
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
