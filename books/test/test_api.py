@@ -30,7 +30,6 @@ class BookAPITest(TestCase):
         """
         url = reverse('book-checkout', kwargs={'pk': self.book.id})
         response = self.client.post(url)
-        print(self.book.is_rented)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_can_not_checkout_book_already_rented_endpoint(self):
@@ -48,12 +47,11 @@ class BookAPITest(TestCase):
         """
         Ensure we can finish a rental from the book-checkin endpoint.
         """
-        print(self.book.is_rented)
         checkout_url = reverse('book-checkout', kwargs={'pk': self.book.id})
-        print(self.book.is_rented)
+        response_url = self.client.post(checkout_url)
         url = reverse('book-checkin', kwargs={'pk': self.book.id})
         response = self.client.post(url)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
     def test_can_not_checkin_unrented_book_endpoint(self):
         """
