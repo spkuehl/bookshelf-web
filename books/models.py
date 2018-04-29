@@ -70,5 +70,19 @@ class Book(models.Model):
         # else:
         #     return None #access denied
 
+    def create_reservation(self, user):
+        # if request.user.is_authenticated():
+            if self.is_rented:
+                reservation = rentals.models.Reservation.objects.create(
+                    user = user,
+                    book = self,
+                )
+                # Reservation confirmation email
+                return reservation #Rental created
+            else:
+                return None #Rental not created
+        # else:
+        #     return False #access denied
+
     def __str__(self):
         return self.title
