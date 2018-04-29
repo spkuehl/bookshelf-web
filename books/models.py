@@ -78,7 +78,7 @@ class Book(models.Model):
                     book = self,
                 )
                 # Reservation confirmation email
-                return rental #Rental created
+                return reservation #Rental created
             else:
                 return None #Rental not created
         # else:

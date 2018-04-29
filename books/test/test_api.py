@@ -2,7 +2,7 @@ from django.test import TestCase
 from books.models import Book
 import datetime
 from bookshelf.users.models import User
-from rentals.models import Rental
+from rentals.models import Rental, Reservation
 from django.urls import reverse
 from rest_framework import status
 
@@ -60,5 +60,43 @@ class BookAPITest(TestCase):
         """
         url = reverse('book-checkin', kwargs={'pk': self.book.id})
         response = self.client.post(url)
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class ReservationAPITest(TestCase):
+    """ Test module for Book API Endpoints. """
+
+    def setUp(self):
+        self.book = Book.objects.create(
+            id=1,
+            title='Game of Thrones',
+            author='George RR Martin',
+            publication_date=datetime.date.today(),
+            is_rented=True
+        )
+        User.objects.create_superuser(
+            'utest',
+            'super@test',
+            'upass'
+        )
+        self.client.login(username='utest', password='upass')
+
+    def test_reserve_book_endpoint(self):
+        """
+        Ensure we can create a reservation from the api endpoint.
+        """
+        url = reverse('book-reservation', kwargs={'pk': self.book.id})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_can_not_reserve_book_it_isnt_rented_endpoint(self):
+        """
+        Ensure we can not create a reservation from the book-reservation
+        endpoint if it is available to rent.
+        """
+        self.book.is_rented = False
+        self.book.save()
+        url = reverse('book-reservation', kwargs={'pk': self.book.id})
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
