@@ -10,6 +10,7 @@ class Rental(models.Model):
     start_date = models.DateField(auto_now_add=True)
     due_date = models.DateField(null=False, blank=False)
     date_returned = models.DateField(null=True, blank=True)
+    active_rental = models.BooleanField(default=True)
     renewel_count = models.PositiveIntegerField(default=0,
         validators=[MaxValueValidator(3)])
 
@@ -26,8 +27,13 @@ class Rental(models.Model):
 class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    reserve_date = models.DateField(auto_now_add=True)
+    reserve_date_time = models.DateTimeField(auto_now_add=True)
     open_reservation = models.BooleanField(default=True)
+
+    def place_in_line(self):
+        later_reservations = Reservation.objects.filter(
+            book=self.book, reserve_date_time__lt=self.reserve_date_time)
+        return len(later_reservations)
 
     def save(self, *args, **kwargs):
         if self.book.is_rented == True:

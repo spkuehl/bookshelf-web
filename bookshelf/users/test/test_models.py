@@ -31,7 +31,7 @@ class UserTest(TestCase):
     def test_user_has_no_overdue(self):
         book = Book.objects.get(id=1)
         user = User.objects.get(username='spkuehl')
-        rental = book.create_rental(book=book, user=user)
+        rental = book.create_rental(user=user)
         self.assertEqual(user.books_overdue(), 0)
 
     def test_user_has_no_rentals(self):
@@ -41,7 +41,7 @@ class UserTest(TestCase):
     def test_user_has_one_overdue(self):
         book = Book.objects.get(id=1)
         user = User.objects.get(username='spkuehl')
-        rental = book.create_rental(book=book, user=user)
+        rental = book.create_rental(user=user)
         rental.due_date = datetime.date.today() + datetime.timedelta(-25)
         rental.save()
         self.assertEqual(user.books_overdue(), 1)
@@ -50,10 +50,10 @@ class UserTest(TestCase):
         user = User.objects.get(username='spkuehl')
         book_one = Book.objects.get(id=1)
         book_two = Book.objects.get(id=2)
-        rental_first = book_one.create_rental(book=book_one, user=user)
+        rental_first = book_one.create_rental(user=user)
         rental_first.due_date = datetime.date.today() + datetime.timedelta(-25)
         rental_first.save()
-        rental_second = book_two.create_rental(book=book_two, user=user)
+        rental_second = book_two.create_rental(user=user)
         rental_second.due_date = datetime.date.today() + datetime.timedelta(-25)
         rental_second.save()
         self.assertEqual(user.books_overdue(), 2)

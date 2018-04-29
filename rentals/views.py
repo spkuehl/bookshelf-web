@@ -1,6 +1,5 @@
 from .models import Rental, Reservation
 from .serializers import RentalSerializer, ReservationSerializer
-from .permissions import IsAdminOrReadOnly
 from rest_framework import viewsets
 
 
