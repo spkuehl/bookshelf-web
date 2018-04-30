@@ -55,18 +55,20 @@ class Book(models.Model):
         # else:
         #     return None #access denied
 
-    def renew_book(self, user, rental):
+    def renew_book(self, user):
         # if user.is_authenticated():
-        if rental.renewel_count < 3:
-            if self.is_rented:
+        if self.is_rented:
+            rental = rentals.models.Rental.objects.get(
+                book=self, active_rental=True)
+            if rental.renewel_count < 3:
                 rental.renewel_count += 1
                 rental.due_date = datetime.date.today() + datetime.timedelta(self.rental_period())
                 rental.save()
                 return rental
             else:
-                return None #Book is not rented
+                return None #return error can not renew more than three times.
         else:
-            return None #return error can not renew more than three times.
+            return None #Book is not rented
         # else:
         #     return None #access denied
 
