@@ -41,3 +41,12 @@ class BookViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post', 'get'], detail=True)
+    def renew(self, request, pk=None):
+        book = self.get_object()
+        if book.is_rented:
+            renew = book.renew_book(request.user)
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
