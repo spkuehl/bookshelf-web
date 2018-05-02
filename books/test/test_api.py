@@ -127,9 +127,12 @@ class RenewAPITest(TestCase):
         checkout_url = reverse('book-checkout', kwargs={'pk': self.book.id})
         checkout_response = self.client.post(checkout_url)
         rental = Rental.objects.get(book=self.book, active_rental=True)
+        rental.due_date = datetime.date.today()
+        self.assertEqual(rental.due_date, datetime.date.today())
         url = reverse('book-renew', kwargs={'pk': self.book.id})
         response = self.client.post(url)
         rental = Rental.objects.get(book=self.book, active_rental=True)
+        self.assertEqual(rental.due_date, datetime.date.today()+datetime.timedelta(self.book.rental_period()))
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(rental.renewel_count, 1)
 
