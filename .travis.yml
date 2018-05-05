@@ -1,30 +1,25 @@
 sudo: required
 language: python
 services:
-  - docker
+- docker
 python:
-  - "3.6"
+- '3.6'
 before_script:
-  - docker-compose build
+- docker-compose build
 script:
-  - docker-compose run --rm web bash -c "flake8 . &&
-                                         python wait_for_postgres.py &&
-                                         ./manage.py test"
-
+- docker-compose run --rm web bash -c "flake8 . && python wait_for_postgres.py &&
+  ./manage.py test"
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login --username=_ --password="$HEROKU_AUTH_TOKEN" registry.heroku.com;
-    docker tag web registry.heroku.com/bookshelf-prod/web;
-    docker push registry.heroku.com/bookshelf-prod/web;
-    fi
-  - if [ "$TRAVIS_BRANCH" == "qa" ]; then
-    docker login --username=_ --password="$HEROKU_AUTH_TOKEN" registry.heroku.com;
-    docker tag web registry.heroku.com/bookshelf-qa/web;
-    docker push registry.heroku.com/bookshelf-qa/web;
-    fi
-
+- if [ "$TRAVIS_BRANCH" == "master" ]; then docker login --username=_ --password="$HEROKU_AUTH_TOKEN"
+  registry.heroku.com; docker tag web registry.heroku.com/bookshelf-prod/web; docker
+  push registry.heroku.com/bookshelf-prod/web; fi
+- if [ "$TRAVIS_BRANCH" == "qa" ]; then docker login --username=_ --password="$HEROKU_AUTH_TOKEN"
+  registry.heroku.com; docker tag web registry.heroku.com/bookshelf-qa/web; docker
+  push registry.heroku.com/bookshelf-qa/web; fi
 notifications:
   email: false
-
 cache:
   pip: true
+env:
+  global:
+    secure: NpdhDtmqDIwvj8KINKsSiqdZy6+hTVNJz0LshtKzE00cqTSkmbhtRTsRAzP+pR7Iu5EC1Kj4rE/jcfiNBg0gIuNqYQqYlEdX/wiZa3wvdOskWNGfqTTEfeE2soyEX/b+Rcx+t9QmBLSs0cM5iV3Q7ASyk4+1MItQPiJWVGz1iZri10Vg54B2WBLZgQX2u/z80lbc3zZitqL0VcMnEXhQXHiugD1d9YgHTlRKERlzEAvBe95bAn73KxEVAnzowbR12yafk87yTT67bY8aW/c9CtBsWbKs/8Gw5ouKqwZeqqD+6VuJ4DCZ8RB830He51yUlp9uXEGddFP3U65YPmQhz9912BWKhLHVvmmgEOP9ikD+zCUbuXW117fjns8b89Z79N32WVWnsAmJrhzzArrkJVibWQd+Ki8JfbIX5hZbBmGyVchjotOg3sJRa1Wq7z7AkgUbdQlFmOT1jgL6CKzPJUw4U47p3jinPgFTp/3X2eSuyeM1mE0k2x2GrjyxldlMRGgWMQZ7VFZZ7tmT7kY2qn3o4C0orcOVjXoOm7CetK08v8NXOn9KXTqiTvmG0GZb6+x0ScuhcsnQT186E+qbBm+vIYPzMiKQaDFc8Vs/8djI218EBzqi5nWp/v5eRO1SVVmQSwzDr4yrkl3gsdT8y5tOP6I94aKk7q5QzfpXgvw=
