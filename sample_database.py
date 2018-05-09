@@ -12,7 +12,7 @@ def book_create_database():
         Book.objects.bulk_create(batch, batch_size)
 
 def user_create_database():
-    user = User.objects.create_superuser(username='admin_user',
+    User.objects.create_superuser(username='admin_user',
                                          password='admin_pass',
                                          email='admin_email@test.com')
     batch_size = 1
