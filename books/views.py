@@ -4,6 +4,7 @@ from .permissions import IsAdminOrReadOnly
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import permissions
 import rentals
 
 
@@ -13,7 +14,16 @@ class BookViewSet(viewsets.ModelViewSet):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAdminOrReadOnly]
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'checkin':
+            permission_classes = [permissions.IsAuthenticated]
+        else:
+            permission_classes = [IsAdminOrReadOnly]
+        return [permission() for permission in permission_classes]
 
     @action(methods=['post', 'get'], detail=True)
     def checkout(self, request, pk=None):
@@ -52,6 +62,6 @@ class BookViewSet(viewsets.ModelViewSet):
                 renew = book.renew_book(request.user)
                 return Response(status=status.HTTP_202_ACCEPTED)
             else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)                
+                return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)

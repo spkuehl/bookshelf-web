@@ -24,39 +24,32 @@ class Book(models.Model):
             return 21
 
     def create_rental(self, user):
-        # if request.user.is_authenticated():
-            if self.is_rented:
-                return None #Rental not created
-            else:
-                rental = rentals.models.Rental.objects.create(
-                    user = user,
-                    book = self,
-                    due_date = datetime.date.today() + datetime.timedelta(self.rental_period()),
-                )
-                self.is_rented = True
-                self.save()
-                rental_emails.send_confirmation(user, rental)
-                return rental #Rental created
-        # else:
-        #     return False #access denied
+        if self.is_rented:
+            return None #Rental not created
+        else:
+            rental = rentals.models.Rental.objects.create(
+                user = user,
+                book = self,
+                due_date = datetime.date.today() + datetime.timedelta(self.rental_period()),
+            )
+            self.is_rented = True
+            self.save()
+            rental_emails.send_confirmation(user, rental)
+            return rental #Rental created
 
     def finish_rental(self, user):
-        # if user.is_authenticated():
-            if self.is_rented:
-                rental = rentals.models.Rental.objects.get(
-                    book=self, active_rental=True)
-                rental.date_returned = datetime.date.today()
-                rental.save()
-                self.is_rented = False
-                self.save()
-                return rental #Rental is closed
-            else:
-                return None #Book is not rented
-        # else:
-        #     return None #access denied
+        if self.is_rented:
+            rental = rentals.models.Rental.objects.get(
+                book=self, active_rental=True)
+            rental.date_returned = datetime.date.today()
+            rental.save()
+            self.is_rented = False
+            self.save()
+            return rental #Rental is closed
+        else:
+            return None #Book is not rented
 
     def renew_book(self, user):
-        # if user.is_authenticated():
         if self.is_rented:
             rental = rentals.models.Rental.objects.get(
                 book=self, active_rental=True)
@@ -69,22 +62,17 @@ class Book(models.Model):
                 return None #return error can not renew more than three times.
         else:
             return None #Book is not rented
-        # else:
-        #     return None #access denied
 
     def create_reservation(self, user):
-        # if request.user.is_authenticated():
-            if self.is_rented:
-                reservation = rentals.models.Reservation.objects.create(
-                    user = user,
-                    book = self,
-                )
-                # Reservation confirmation email
-                return reservation #Rental created
-            else:
-                return None #Rental not created
-        # else:
-        #     return False #access denied
+        if self.is_rented:
+            reservation = rentals.models.Reservation.objects.create(
+                user = user,
+                book = self,
+            )
+            # Reservation confirmation email
+            return reservation #Rental created
+        else:
+            return None #Rental not created
 
     def __str__(self):
         return self.title
