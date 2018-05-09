@@ -75,7 +75,7 @@ class ReservationAPITest(TestCase):
             publication_date=datetime.date.today(),
             is_rented=True
         )
-        User.objects.create_superuser(
+        User.objects.create_user(
             'utest',
             'super@test',
             'upass'
@@ -113,7 +113,7 @@ class RenewAPITest(TestCase):
             publication_date=datetime.date.today(),
             is_rented=False
         )
-        User.objects.create_superuser(
+        User.objects.create_user(
             'utest',
             'super@test',
             'upass'
