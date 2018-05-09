@@ -17,7 +17,7 @@ class BookAPITest(TestCase):
             author='George RR Martin',
             publication_date=datetime.date.today()
         )
-        User.objects.create_superuser(
+        User.objects.create_user(
             'utest',
             'super@test',
             'upass'

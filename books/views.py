@@ -19,7 +19,7 @@ class BookViewSet(viewsets.ModelViewSet):
         """
         Instantiates and returns the list of permissions that this view requires.
         """
-        if self.action == 'checkin':
+        if self.action in ('checkout', 'checkin', 'reservation', 'renew'):
             permission_classes = [permissions.IsAuthenticated]
         else:
             permission_classes = [IsAdminOrReadOnly]
